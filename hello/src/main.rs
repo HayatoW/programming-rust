@@ -1,5 +1,27 @@
+use std::env;
+use std::str::FromStr;
+
 fn main() {
-    println!("Hello, world!");
+    let mut numbers = Vec::new();
+
+    // args で得られるイテレータが最初に生成する値は、常にそのプログラムの名前となるので、スキップ
+    for arg in env::args().skip(1) {
+        numbers.push(u64::from_str(&arg).expect("error parsing argument"));
+    }
+
+    if numbers.len() == 0 {
+        eprintln!("Usage: gcd NUMBER ...");
+        std::process::exit(1);
+    }
+
+    let mut d = numbers[0];
+    // & 演算子はベクタの2番目以降の要素への参照 (reference) を借用している
+    for m in &numbers[1..] {
+        // * は、m を参照解決 (dereferences) する演算子で、参照されている値を返す
+        d = gcd(d, *m);
+    }
+
+    println!("The greatest common divisor of {:?} is {}", numbers, d);
 }
 
 /// https://en.wikipedia.org/wiki/Euclidean_algorithm
