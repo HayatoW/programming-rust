@@ -4,7 +4,9 @@
         "editor.formatOnSave": true
     },
     "cSpell.words": [
+        "actix",
         "rustc",
+        "serde",
         "trixie"
     ]
 }
