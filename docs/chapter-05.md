@@ -15,4 +15,11 @@ assert_eq!(anime_ref.name, "Aria: The Animation");
 assert_eq!((*anime_ref).name, "Aria: The Animation");
 ```
 
+Rust コンパイラは、プログラム中のすべての参照型に対して、その参照の使われ方によって生じる制約を反映した **生存期間** (lifetime) を割り当てる。
 
+参照の生存期間は肩の一部であり、実行時の表現はない。
+
+Rust における、グローバル変数に該当するものは、static と呼ばれる。
+
+生存期間 `'a` は tick A と発音する<br>
+「任意の生存期間 a に対して」という意味
