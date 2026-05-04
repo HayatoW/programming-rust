@@ -1,28 +1,29 @@
 // 検証用の書き捨て
 
-fn main() {}
+fn main() {
+    let a = [0, -3, 0, 15, 48];
+    let e = find_extrema(&a);
 
-pub struct Queue {
-    older: Vec<char>,
-    younger: Vec<char>,
+    assert_eq!(*e.least, -3);
+    assert_eq!(*e.greatest, 48);
 }
 
-impl Queue {
-    pub fn push(&mut self, c: char) {
-        self.younger.push(c);
-    }
+struct Extrema<'elt> {
+    greatest: &'elt i32,
+    least: &'elt i32,
+}
 
-    pub fn pop(&mut self) -> Option<char> {
-        if self.older.is_empty() {
-            if self.younger.is_empty() {
-                return None;
-            }
+fn find_extrema(slice: &[i32]) -> Extrema<'_> {
+    let mut greatest = &slice[0];
+    let mut least = &slice[0];
 
-            use std::mem::swap;
-            swap(&mut self.older, &mut self.younger);
-            self.older.reverse();
+    for i in 1..slice.len() {
+        if slice[i] < *least {
+            least = &slice[i];
         }
-
-        self.older.pop()
+        if slice[i] > *greatest {
+            greatest = &slice[i];
+        }
     }
+    Extrema { greatest, least }
 }
