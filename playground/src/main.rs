@@ -1,51 +1,28 @@
 // 検証用の書き捨て
 
-fn main() {
-    let hokey = Broom {
-        name: "Hokey".to_string(),
-        height: 60,
-        health: 100,
-        position: (100.0, 200.0, 0.0),
-        intent: BroomIntent::FetchWater,
-    };
+fn main() {}
 
-    let (hokey1, hokey2) = chop(hokey);
-    assert_eq!(hokey1.name, "Hokey I");
-    assert_eq!(hokey1.height, 30);
-    assert_eq!(hokey1.health, 100);
-
-    assert_eq!(hokey2.name, "Hokey II");
-    assert_eq!(hokey2.height, 30);
-    assert_eq!(hokey2.health, 100);
+pub struct Queue {
+    older: Vec<char>,
+    younger: Vec<char>,
 }
 
-struct Broom {
-    name: String,
-    height: u32,
-    health: u32,
-    position: (f32, f32, f32),
-    intent: BroomIntent,
-}
+impl Queue {
+    pub fn push(&mut self, c: char) {
+        self.younger.push(c);
+    }
 
-#[derive(Copy, Clone)]
-enum BroomIntent {
-    FetchWater,
-    DumpWater,
-}
+    pub fn pop(&mut self) -> Option<char> {
+        if self.older.is_empty() {
+            if self.younger.is_empty() {
+                return None;
+            }
 
-fn chop(b: Broom) -> (Broom, Broom) {
-    let mut broom1 = Broom {
-        height: b.height / 2,
-        ..b
-    };
+            use std::mem::swap;
+            swap(&mut self.older, &mut self.younger);
+            self.older.reverse();
+        }
 
-    let mut broom2 = Broom {
-        name: broom1.name.clone(),
-        ..broom1
-    };
-
-    broom1.name.push_str(" I");
-    broom2.name.push_str(" II");
-
-    (broom1, broom2)
+        self.older.pop()
+    }
 }
