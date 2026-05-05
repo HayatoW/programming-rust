@@ -1,24 +1,32 @@
 // 検証用の書き捨て
 
-use self::BinaryTree::*;
+fn main() {}
 
-fn main() {
-    let jupiter_tree = NonEmpty(Box::new(TreeNone {
-        element: "Jupiter",
-        left: Empty,
-        right: Empty,
-    }));
+fn describe_point(x: i32, y: i32) -> &'static str {
+    use std::cmp::Ordering::*;
+    match (x.cmp(&0), y.cmp(&0)) {
+        (Equal, Equal) => "at the origin",
+        (_, Equal) => "on the x axis",
+        (Equal, _) => "on the y axis",
+        (Greater, Greater) => "in the first quadrant",
+        (Less, Greater) => "in the second quadrant",
+        _ => "somewhere else",
+    }
 }
 
-// `T` の順序付きコレクション
-enum BinaryTree<T> {
-    Empty,
-    NonEmpty(Box<TreeNone<T>>),
-}
-
-// BinaryTree の一部
-struct TreeNone<T> {
-    element: T,
-    left: BinaryTree<T>,
-    right: BinaryTree<T>,
+fn _match(next_char: char) {
+    match next_char {
+        '0'..'9' => {
+            "a digit";
+        }
+        'a'..='z' => {
+            "a lowercase letter";
+        }
+        'A'..='Z' => {
+            "an uppercase letter";
+        }
+        _ => {
+            "something else";
+        }
+    }
 }
