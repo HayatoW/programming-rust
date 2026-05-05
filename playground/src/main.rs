@@ -1,16 +1,24 @@
 // 検証用の書き捨て
 
-use std::collections::HashMap;
+use self::BinaryTree::*;
 
-fn main() {}
+fn main() {
+    let jupiter_tree = NonEmpty(Box::new(TreeNone {
+        element: "Jupiter",
+        left: Empty,
+        right: Empty,
+    }));
+}
 
-enum Json {
-    Null,
-    Boolean(bool),
-    Number(f64),
-    String(String),
-    Array(Vec<Json>),
-    /// Object を示す HashMap を Box で囲んでいるのは、
-    /// すべての Json 値をよりコンパクトにするため。
-    Object(Box<HashMap<String, Json>>),
+// `T` の順序付きコレクション
+enum BinaryTree<T> {
+    Empty,
+    NonEmpty(Box<TreeNone<T>>),
+}
+
+// BinaryTree の一部
+struct TreeNone<T> {
+    element: T,
+    left: BinaryTree<T>,
+    right: BinaryTree<T>,
 }
