@@ -91,4 +91,13 @@ impl Iterator for Args {
 
 関数の返り値の型をトレイトオブジェクトで書いている場合、impl trait で置き換えられないか考えてみる
 
-
+```rust
+// コンパイルできるけど危ないコード
+fn dot(v1: &[i64], v2: &[i64]) -> i64 {
+    let mut total = 0;
+    for i in 0..v1.len() {
+        total = total + v1[i] * v2[i];
+    }
+    total
+}
+```
