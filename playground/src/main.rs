@@ -1,35 +1,16 @@
 //! 検証用の書き捨て
 
-use std::ops::{Deref, DerefMut};
+use std::collections::HashSet;
 
 fn main() {
-    let mut s = Selector {
-        elements: vec!['x', 'y', 'z'],
-        current: 2,
-    };
-
-    assert_eq!(*s, 'z');
-    assert!(s.is_alphabetic());
-
-    *s = 'w';
-    assert_eq!(s.elements, ['x', 'y', 'w']);
+    let squares = [4, 9, 16, 25, 36, 49, 64];
+    let (powers_of_two, impure): (HashSet<i32>, HashSet<i32>) =
+        squares.iter().partition(|&n| n & (n - 1) == 0);
 }
 
-struct Selector<T> {
-    elements: Vec<T>,
-    current: usize,
-}
+type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
+type GenericResult<T> = Result<T, GenericError>;
 
-impl<T> Deref for Selector<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.elements[self.current]
-    }
-}
-
-impl<T> DerefMut for Selector<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.elements[self.current]
-    }
+fn parse_i32_bytes(b: &[u8]) -> GenericResult<i32> {
+    Ok(std::str::from_utf8(b)?.parse::<i32>()?)
 }
