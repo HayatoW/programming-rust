@@ -1,9 +1,7 @@
 //! 検証用の書き捨て
 
 fn main() {
-    let a = true && false;
-    let b = true & false;
+    let mut floats = [4.0, 5.0, 1.0, 2.0, 3.0];
 
-    println!("{}", a);
-    println!("{}", b);
+    floats.sort();
 }
