@@ -1,19 +1,28 @@
 //! 検証用の書き捨て
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 fn main() {
-    let mut major_cities = HashMap::new();
+    // 都市とそこにある公園のテーブル。それぞれの値はベクタ
+    let mut parks = BTreeMap::new();
 
-    major_cities.insert("Japan", vec!["Tokyo", "Kyoto"]);
-    major_cities.insert("The United States", vec!["Portland", "Nashville"]);
-    major_cities.insert("Brazil", vec!["São Paulo", "Brasília"]);
-    major_cities.insert("Kenya", vec!["Nairobi", "Mombasa"]);
-    major_cities.insert("The Netherlands", vec!["Amsterdam", "Utrecht"]);
+    parks.insert("Portland", vec!["Mt. Tabor Park", "Forest Park"]);
+    parks.insert("Kyoto", vec!["Tadasu-no-Mori Forest", "Maruyama Koen"]);
+    parks.insert("Nashville", vec!["Percy Warner Park", "Dragon Park"]);
 
-    let countries = ["Japan", "Brazil", "Kenya"];
+    // すべての公園からなるベクタを作る。`values` は個々のベクタを返すイテレータを作る。
+    // `flatten` で各ベクタの要素をアイテムとして生成するイテレータを作る。
+    let all_parks: Vec<_> = parks.values().flatten().cloned().collect();
 
-    for &city in countries.iter().flat_map(|country| &major_cities[country]) {
-        println!("{}", city);
-    }
+    assert_eq!(
+        all_parks,
+        vec![
+            "Tadasu-no-Mori Forest",
+            "Maruyama Koen",
+            "Percy Warner Park",
+            "Dragon Park",
+            "Mt. Tabor Park",
+            "Forest Park"
+        ]
+    );
 }
