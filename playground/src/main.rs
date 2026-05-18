@@ -1,7 +1,19 @@
 //! 検証用の書き捨て
 
+use std::collections::HashMap;
+
 fn main() {
-    let text = "  ponies  \n   giraffes\niguanas  \nsquid".to_string();
-    let v: Vec<&str> = text.lines().map(str::trim).collect();
-    assert_eq!(v, ["ponies", "giraffes", "iguanas", "squid"]);
+    let mut major_cities = HashMap::new();
+
+    major_cities.insert("Japan", vec!["Tokyo", "Kyoto"]);
+    major_cities.insert("The United States", vec!["Portland", "Nashville"]);
+    major_cities.insert("Brazil", vec!["São Paulo", "Brasília"]);
+    major_cities.insert("Kenya", vec!["Nairobi", "Mombasa"]);
+    major_cities.insert("The Netherlands", vec!["Amsterdam", "Utrecht"]);
+
+    let countries = ["Japan", "Brazil", "Kenya"];
+
+    for &city in countries.iter().flat_map(|country| &major_cities[country]) {
+        println!("{}", city);
+    }
 }
