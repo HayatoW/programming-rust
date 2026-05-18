@@ -1,28 +1,18 @@
 //! 検証用の書き捨て
 
-use std::iter::Peekable;
-
-fn parse_number<I>(tokens: &mut Peekable<I>) -> u32
-where
-    I: Iterator<Item = char>,
-{
-    let mut n = 0;
-    loop {
-        match tokens.peek() {
-            Some(r) if r.is_digit(10) => {
-                n = n * 10 + r.to_digit(10).unwrap();
-            }
-            _ => return n,
-        }
-        tokens.next();
-    }
-}
+use std::iter::{once, repeat};
 
 fn main() {
-    let mut chars = "226153980,1766319049".chars().peekable();
-    assert_eq!(parse_number(&mut chars), 226153980);
-    // `parse_number` はカンマを消費しないので、ここで消費する
-    assert_eq!(chars.next(), Some(','));
-    assert_eq!(parse_number(&mut chars), 1766319049);
-    assert_eq!(chars.next(), None);
+    let fizzes = repeat("").take(2).chain(once("fizz")).cycle();
+    let buzzes = repeat("").take(4).chain(once("buzz")).cycle();
+    let fizzes_buzzes = fizzes.zip(buzzes);
+
+    let fizz_buzz = (1..100).zip(fizzes_buzzes).map(|tuple| match tuple {
+        (i, ("", "")) => i.to_string(),
+        (_, (fizz, buzz)) => format!("{}{}", fizz, buzz),
+    });
+
+    for line in fizz_buzz {
+        println!("{}", line);
+    }
 }
