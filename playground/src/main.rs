@@ -12,6 +12,7 @@ fn main() {
 
     // すべての公園からなるベクタを作る。`values` は個々のベクタを返すイテレータを作る。
     // `flatten` で各ベクタの要素をアイテムとして生成するイテレータを作る。
+    // 要素型のみ推論させる。
     let all_parks: Vec<_> = parks.values().flatten().cloned().collect();
 
     assert_eq!(
