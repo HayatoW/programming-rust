@@ -1,18 +1,14 @@
 //! 検証用の書き捨て
 
-use std::iter::{once, repeat};
+use std::cmp::Ordering;
+
+// 2つの f64 値を比較する。NaN ならパニックを起こす
+fn cmp(lhs: &f64, rhs: &f64) -> Ordering {
+    lhs.partial_cmp(rhs).unwrap()
+}
 
 fn main() {
-    let fizzes = repeat("").take(2).chain(once("fizz")).cycle();
-    let buzzes = repeat("").take(4).chain(once("buzz")).cycle();
-    let fizzes_buzzes = fizzes.zip(buzzes);
-
-    let fizz_buzz = (1..100).zip(fizzes_buzzes).map(|tuple| match tuple {
-        (i, ("", "")) => i.to_string(),
-        (_, (fizz, buzz)) => format!("{}{}", fizz, buzz),
-    });
-
-    for line in fizz_buzz {
-        println!("{}", line);
-    }
+    let numbers = [1.0, 4.0, f64::NAN, 2.0];
+    assert_eq!(numbers.iter().copied().max_by(cmp), Some(4.0));
+    assert_eq!(numbers.iter().copied().min_by(cmp), Some(1.0));
 }
