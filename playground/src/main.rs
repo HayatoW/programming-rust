@@ -1,14 +1,18 @@
 //! 検証用の書き捨て
 
-use std::cmp::Ordering;
-
-// 2つの f64 値を比較する。NaN ならパニックを起こす
-fn cmp(lhs: &f64, rhs: &f64) -> Ordering {
-    lhs.partial_cmp(rhs).unwrap()
-}
+use std::collections::HashMap;
 
 fn main() {
-    let numbers = [1.0, 4.0, f64::NAN, 2.0];
-    assert_eq!(numbers.iter().copied().max_by(cmp), Some(4.0));
-    assert_eq!(numbers.iter().copied().min_by(cmp), Some(1.0));
+    let mut populations = HashMap::new();
+
+    populations.insert("Portland", 583_776);
+    populations.insert("Fossil", 449);
+    populations.insert("Greenhorn", 2);
+    populations.insert("Boring", 7_762);
+    populations.insert("The Dalles", 15_340);
+
+    assert_eq!(
+        populations.iter().max_by_key(|&(_name, pop)| pop),
+        Some((&"Portland", &583_776))
+    );
 }
