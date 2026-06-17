@@ -42,3 +42,15 @@ fn get_name() -> Cow<'static, str> {
         .unwrap_or(Cow::Borrowed("whoever you are"))
 }
 ```
+
+# フォーマットパラメータ
+
+以下の形式をとる・
+
+```rust
+{which:how}
+```
+
+how を書く場合にはコロンが必須。
+
+`{` または `}` を文字列に含めたい場合は、`{{` や `}}` と二重で書く
