@@ -1,6 +1,7 @@
 use image::codecs::png::PngEncoder;
 use image::{ExtendedColorType, ImageEncoder};
 use num::Complex;
+use rayon::prelude::*;
 use std::env;
 use std::{fs::File, str::FromStr};
 
@@ -23,26 +24,18 @@ fn main() {
     // vec![v; n] は、長さ n のベクタを作り、v で初期化する
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
-    let threads = 8;
-    let rows_per_band = bounds.1 / threads + 1;
-
+    // 水平の帯に `pixels` を分割したスライスのスコープ
     {
-        let bands: Vec<&mut [u8]> = pixels.chunks_mut(rows_per_band * bounds.0).collect();
-        crossbeam::scope(|spawner| {
-            for (i, band) in bands.into_iter().enumerate() {
-                let top = rows_per_band * i;
-                let height = band.len() / bounds.0;
-                let band_bounds = (bounds.0, height);
-                let band_upper_left = pixel_to_point(bounds, (0, top), upper_left, lower_right);
-                let band_lower_right =
-                    pixel_to_point(bounds, (bounds.0, top + height), upper_left, lower_right);
+        let bands: Vec<(usize, &mut [u8])> = pixels.chunks_mut(bounds.0).enumerate().collect();
 
-                spawner.spawn(move |_| {
-                    render(band, band_bounds, band_upper_left, band_lower_right);
-                });
-            }
-        })
-        .unwrap();
+        bands.into_par_iter().for_each(|(i, band)| {
+            let top = i;
+            let band_bounds = (bounds.0, 1);
+            let band_upper_left = pixel_to_point(bounds, (0, top), upper_left, lower_right);
+            let band_lower_right =
+                pixel_to_point(bounds, (bounds.0, top + 1), upper_left, lower_right);
+            render(band, band_bounds, band_upper_left, band_lower_right);
+        });
     }
 
     write_image(&args[1], &pixels, bounds).expect("error writing PNG file");
@@ -168,7 +161,7 @@ fn render(
     assert!(pixels.len() == bounds.0 * bounds.1);
 
     for row in 0..bounds.1 {
-        for column in 0..bounds.1 {
+        for column in 0..bounds.0 {
             let point = pixel_to_point(bounds, (column, row), upper_left, lower_right);
             pixels[row * bounds.0 + column] = match escape_time(point, 255) {
                 None => 0,

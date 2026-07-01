@@ -472,6 +472,7 @@ dependencies = [
  "crossbeam",
  "image",
  "num",
+ "rayon",
 ]
 
 [[package]]
