@@ -1,8 +1,9 @@
+use std::sync::Arc;
+
 use async_chat::utils::{self, ChatResult};
 use async_chat::{FromClient, FromServer};
 use async_std::{io, net};
 use async_std::{prelude::*, task};
-use std::sync::Arc;
 
 async fn send_commands(mut to_server: net::TcpStream) -> ChatResult<()> {
     println!(
@@ -87,8 +88,8 @@ fn parse_command(line: &str) -> Option<FromClient> {
     }
 }
 
-fn get_next_token(input: &str) -> Option<(&str, &str)> {
-    input.trim_start();
+fn get_next_token(mut input: &str) -> Option<(&str, &str)> {
+    input = input.trim_start();
 
     if input.is_empty() {
         return None;
