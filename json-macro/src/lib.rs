@@ -27,3 +27,17 @@ impl<'a> From<&'a str> for Json {
         Json::String(value.to_string())
     }
 }
+
+macro_rules! impl_from_num_for_json {
+    ( $( $t:ident )* ) => {
+        $(
+            impl From<$t> for Json {
+                fn from(n: $t) -> Json {
+                    Json::Number(n as f64)
+                }
+            }
+        )*
+    };
+}
+
+impl_from_num_for_json!(u8 i8 u16 i16 u32 i32 u64 i64 u128 i128 usize isize f32 f64);
