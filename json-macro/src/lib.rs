@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+#[macro_use]
+mod macros;
+
 #[derive(Clone, PartialEq, Debug)]
 pub enum Json {
     Null,
