@@ -45,4 +45,22 @@ mod test {
         ));
         assert_eq!(macro_generated_value, hand_coded_value);
     }
+
+    #[test]
+    fn original_example() {
+        let hand_coded_value = {
+            let students = Json::Array(vec![Json::Object(Box::new(
+                vec![
+                    ("name".to_string(), Json::String("Jim Blandy".to_string())),
+                    ("class_of".to_string(), Json::Number(1926.0)),
+                    (
+                        "major".to_string(),
+                        Json::String("Tibetan throat singing".to_string()),
+                    ),
+                ]
+                .into_iter()
+                .collect(),
+            ))]);
+        };
+    }
 }
