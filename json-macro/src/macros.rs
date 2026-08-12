@@ -49,18 +49,51 @@ mod test {
     #[test]
     fn original_example() {
         let hand_coded_value = {
-            let students = Json::Array(vec![Json::Object(Box::new(
-                vec![
-                    ("name".to_string(), Json::String("Jim Blandy".to_string())),
-                    ("class_of".to_string(), Json::Number(1926.0)),
-                    (
-                        "major".to_string(),
-                        Json::String("Tibetan throat singing".to_string()),
-                    ),
-                ]
-                .into_iter()
-                .collect(),
-            ))]);
+            let students = Json::Array(vec![
+                Json::Object(Box::new(
+                    vec![
+                        ("name".to_string(), Json::String("Jim Blandy".to_string())),
+                        ("class_of".to_string(), Json::Number(1926.0)),
+                        (
+                            "major".to_string(),
+                            Json::String("Tibetan throat singing".to_string()),
+                        ),
+                    ]
+                    .into_iter()
+                    .collect(),
+                )),
+                Json::Object(Box::new(
+                    vec![
+                        (
+                            "name".to_string(),
+                            Json::String("Jason Orendorff".to_string()),
+                        ),
+                        ("class_of".to_string(), Json::Number(1702.0)),
+                        ("major".to_string(), Json::String("Knots".to_string())),
+                    ]
+                    .into_iter()
+                    .collect(),
+                )),
+            ]);
+            students
         };
+
+        let macro_generated_value = {
+            let students = json!([
+                {
+                    "name": "Jim Blandy",
+                    "class_of": 1926,
+                    "major": "Tibetan throat singing"
+                },
+                {
+                    "name": "Jason Orendorff",
+                    "class_of": 1702,
+                    "major": "Knots"
+                }
+            ]);
+            students
+        };
+
+        assert_eq!(macro_generated_value, hand_coded_value);
     }
 }
