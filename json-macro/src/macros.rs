@@ -96,4 +96,17 @@ mod test {
 
         assert_eq!(macro_generated_value, hand_coded_value);
     }
+
+    #[test]
+    fn json_array_with_json_element() {
+        let macro_generated_value = json!([
+            {"pitch": 440.0}
+        ]);
+        let hand_coded_value = Json::Array(vec![Json::Object(Box::new(
+            vec![("pitch".to_string(), Json::Number(440.0))]
+                .into_iter()
+                .collect(),
+        ))]);
+        assert_eq!(macro_generated_value, hand_coded_value);
+    }
 }
