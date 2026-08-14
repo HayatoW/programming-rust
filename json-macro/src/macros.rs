@@ -109,4 +109,23 @@ mod test {
         ))]);
         assert_eq!(macro_generated_value, hand_coded_value);
     }
+
+    #[test]
+    fn json_monolith() {
+        let width = 4.0;
+        let desc = json!({
+            "width":width,
+            "height": (width * 9.0 / 4.0)
+        });
+
+        let hand_coded_value = Json::Object(Box::new(
+            vec![
+                ("width".to_string(), Json::Number(width)),
+                ("height".to_string(), Json::Number(width * 9.0 / 4.0)),
+            ]
+            .into_iter()
+            .collect(),
+        ));
+        assert_eq!(desc, hand_coded_value);
+    }
 }
