@@ -128,4 +128,29 @@ mod test {
         ));
         assert_eq!(desc, hand_coded_value);
     }
+
+    #[test]
+    fn hygiene() {
+        let fields = "Fields, W.C.";
+        let role = json!({
+            "name": "Larson E. Whipsnade",
+            "actor": fields
+        });
+
+        let hand_coded_value = Json::Object(Box::new(
+            vec![
+                (
+                    "name".to_string(),
+                    Json::String("Larson E. Whipsnade".to_string()),
+                ),
+                (
+                    "actor".to_string(),
+                    Json::String("Fields, W.C.".to_string()),
+                ),
+            ]
+            .into_iter()
+            .collect(),
+        ));
+        assert_eq!(role, hand_coded_value);
+    }
 }
