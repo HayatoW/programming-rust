@@ -15,5 +15,12 @@ mod ref_with_flag {
                 behaves_like: PhantomData,
             }
         }
+
+        pub fn get_ref(&self) -> &'a T {
+            unsafe {
+                let ptr = (self.ptr_and_bit & !1) as *const T;
+                &*ptr
+            }
+        }
     }
 }
