@@ -22,5 +22,24 @@ mod ref_with_flag {
                 &*ptr
             }
         }
+
+        pub fn get_flag(&self) -> bool {
+            self.ptr_and_bit & 1 != 0
+        }
+    }
+}
+
+#[cfg(test)]
+mod ref_with_flag_test {
+    use super::ref_with_flag;
+
+    #[test]
+    fn use_ref_with_flag() {
+        use ref_with_flag::RefWithFlag;
+
+        let vec = vec![10, 20, 30];
+        let flagged = RefWithFlag::new(&vec, true);
+        assert_eq!(flagged.get_ref()[1], 20);
+        assert_eq!(flagged.get_flag(), true);
     }
 }
