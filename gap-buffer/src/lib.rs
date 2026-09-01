@@ -10,4 +10,17 @@ mod gap {
         /// この範囲の前後の領域は常に初期化されている
         gap: Range<usize>,
     }
+
+    impl<T> GapBuffer<T> {
+        pub fn new() -> GapBuffer<T> {
+            GapBuffer {
+                storage: Vec::new(),
+                gap: 0..0,
+            }
+        }
+
+        pub fn capacity(&self) -> usize {
+            self.storage.capacity()
+        }
+    }
 }
