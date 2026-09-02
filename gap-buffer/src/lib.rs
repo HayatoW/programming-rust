@@ -22,5 +22,13 @@ mod gap {
         pub fn capacity(&self) -> usize {
             self.storage.capacity()
         }
+
+        pub fn len(&self) -> usize {
+            self.capacity() - self.gap.len()
+        }
+
+        pub fn position(&self) -> usize {
+            self.gap.start
+        }
     }
 }
