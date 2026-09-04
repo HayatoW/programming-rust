@@ -38,5 +38,22 @@ mod gap {
         unsafe fn space_mut(&mut self, index: usize) -> *mut T {
             self.storage.as_mut_ptr().offset(index as isize)
         }
+
+        fn index_to_raw(&self, index: usize) -> usize {
+            if index < self.gap.start {
+                index
+            } else {
+                index + self.gap.len()
+            }
+        }
+
+        pub fn get(&self, index: usize) -> Option<&T> {
+            let raw = self.index_to_raw(index);
+            if raw < self.capacity() {
+                unsafe { Some(&*self.space(raw)) }
+            } else {
+                None
+            }
+        }
     }
 }
