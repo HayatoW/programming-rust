@@ -78,5 +78,18 @@ mod gap {
                 self.gap = pos..pos + gap.len();
             }
         }
+
+        pub fn insert(&mut self, elt: T) {
+            if self.gap.len() == 0 {
+                self.enlarge_gap();
+            }
+
+            unsafe {
+                let index = self.gap.start;
+                std::ptr::write(self.space_mut(index), elt);
+            }
+
+            self.gap.start += 1;
+        }
     }
 }
