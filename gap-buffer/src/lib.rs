@@ -91,5 +91,14 @@ mod gap {
 
             self.gap.start += 1;
         }
+
+        pub fn insert_iter<T>(&mut self, iterable: T)
+        where
+            T: IntoIterator<Item = T>,
+        {
+            for item in iterable {
+                self.insert(item);
+            }
+        }
     }
 }
