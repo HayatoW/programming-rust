@@ -144,4 +144,21 @@ mod gap {
             }
         }
     }
+
+    pub struct Iter<'a, T> {
+        buffer: &'a GapBuffer<T>,
+        pos: usize,
+    }
+
+    impl<'a, T> Iterator for Iter<'a, T> {
+        type Item = &'a T;
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.pos >= self.buffer.len() {
+                None
+            } else {
+                self.pos += 1;
+                self.buffer.get(self.pos - 1)
+            }
+        }
+    }
 }
