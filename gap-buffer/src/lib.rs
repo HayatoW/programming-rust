@@ -161,4 +161,15 @@ mod gap {
             }
         }
     }
+
+    impl<'a, T: 'a> IntoIterator for &'a GapBuffer<T> {
+        type Item = &'a T;
+        type IntoIter = Iter<'a, T>;
+        fn into_iter(self) -> Self::IntoIter {
+            Iter {
+                buffer: self,
+                pos: 0,
+            }
+        }
+    }
 }
