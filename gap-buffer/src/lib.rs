@@ -172,4 +172,21 @@ mod gap {
             }
         }
     }
+
+    impl GapBuffer<char> {
+        pub fn get_string(&self) -> String {
+            let mut text = String::new();
+            text.extend(self);
+            text
+        }
+    }
+
+    use std::fmt;
+    impl<T: fmt::Debug> fmt::Debug for GapBuffer<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            let indices = (0..self.gap.start).chain(self.gap.end..self.capacity());
+            let elements = indices.map(|i| unsafe { &*self.space(i) });
+            f.debug_list().entries(elements).finish()
+        }
+    }
 }
