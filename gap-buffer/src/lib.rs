@@ -32,11 +32,11 @@ mod gap {
         }
 
         unsafe fn space(&self, index: usize) -> *const T {
-            self.storage.as_ptr().offset(index as isize)
+            unsafe { self.storage.as_ptr().add(index) }
         }
 
         unsafe fn space_mut(&mut self, index: usize) -> *mut T {
-            self.storage.as_mut_ptr().offset(index as isize)
+            unsafe { self.storage.as_mut_ptr().add(index) }
         }
 
         fn index_to_raw(&self, index: usize) -> usize {
@@ -92,9 +92,9 @@ mod gap {
             self.gap.start += 1;
         }
 
-        pub fn insert_iter<T>(&mut self, iterable: T)
+        pub fn insert_iter<I>(&mut self, iterable: I)
         where
-            T: IntoIterator<Item = T>,
+            I: IntoIterator<Item = T>,
         {
             for item in iterable {
                 self.insert(item);
