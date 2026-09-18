@@ -190,3 +190,71 @@ mod gap {
         }
     }
 }
+
+mod gap_test {
+    #[test]
+    fn test() {
+        use super::gap::GapBuffer;
+
+        let mut buf = GapBuffer::new();
+        buf.insert_iter("Lord of the Rings".chars());
+        buf.set_position(12);
+
+        buf.insert_iter("Onion ".chars());
+
+        assert_eq!(buf.get_string(), "Lord of the Onion Rings");
+    }
+
+    #[test]
+    fn misc() {
+        use super::gap::GapBuffer;
+
+        let mut gb = GapBuffer::new();
+        println!("{:?}", gb);
+        gb.insert("foo".to_string());
+        println!("{:?}", gb);
+        gb.insert("bar".to_string());
+        println!("{:?}", gb);
+        gb.insert("baz".to_string());
+        println!("{:?}", gb);
+        gb.insert("qux".to_string());
+        println!("{:?}", gb);
+        gb.insert("quux".to_string());
+        println!("{:?}", gb);
+
+        gb.set_position(2);
+
+        assert_eq!(gb.remove(), Some("baz".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), Some("qux".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), Some("quux".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), None);
+        println!("{:?}", gb);
+
+        gb.insert("quuux".to_string());
+        println!("{:?}", gb);
+
+        gb.set_position(0);
+        assert_eq!(gb.remove(), Some("foo".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), Some("bar".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), Some("quuux".to_string()));
+        println!("{:?}", gb);
+        assert_eq!(gb.remove(), None);
+        println!("{:?}", gb);
+    }
+
+    #[test]
+    fn drop_elements() {
+        use super::gap::GapBuffer;
+
+        let mut gb = GapBuffer::new();
+        gb.insert("foo".to_string());
+        gb.insert("bar".to_string());
+
+        gb.set_position(1);
+    }
+}
