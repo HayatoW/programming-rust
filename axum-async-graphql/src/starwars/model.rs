@@ -1,4 +1,4 @@
-use async_graphql::{Enum, Object};
+use async_graphql::{Context, Enum, Object};
 
 use crate::starwars::StarWarsChar;
 
@@ -35,5 +35,18 @@ impl<'a> Droid<'a> {
 
     async fn name(&self) -> &str {
         self.0.name
+    }
+}
+
+pub struct QueryRoot;
+
+#[Object]
+impl QueryRoot {
+    async fn human<'a>(
+        &self,
+        ctx: &Context,
+        #[graphql(desc = "id of the human")] id: String,
+    ) -> Option<Human<'a>> {
+        ctx.data_unchecked()
     }
 }
