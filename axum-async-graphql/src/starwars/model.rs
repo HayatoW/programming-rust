@@ -1,6 +1,6 @@
 use async_graphql::{Context, Enum, Object};
 
-use crate::starwars::StarWarsChar;
+use crate::starwars::{StarWars, StarWarsChar};
 
 #[derive(Enum, Copy, Clone, Eq, PartialEq)]
 pub enum Epsode {
@@ -47,6 +47,7 @@ impl QueryRoot {
         ctx: &Context,
         #[graphql(desc = "id of the human")] id: String,
     ) -> Option<Human<'a>> {
-        ctx.data_unchecked()
+        // まだ書けない
+        ctx.data_unchecked::<StarWars>().human
     }
 }
