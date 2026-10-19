@@ -1,13 +1,13 @@
-use async_graphql::{Schema, http::GraphiQLSource};
-use axum::response::{self, IntoResponse};
+// use async_graphql::{Schema, http::GraphiQLSource};
+// use axum::response::{self, IntoResponse};
 
 mod starwars;
 
-async fn graphiql() -> impl IntoResponse {
-    response::Html(GraphiQLSource::build().endpoint("/").finish())
-}
+// async fn graphiql() -> impl IntoResponse {
+//     response::Html(GraphiQLSource::build().endpoint("/").finish())
+// }
 
-#[tokio::main]
-async fn main() {
-    let schema = Schema::build(query, mutation, subscription);
+// #[tokio::main]
+fn main() {
+    // let schema = Schema::build(query, mutation, subscription);
 }
