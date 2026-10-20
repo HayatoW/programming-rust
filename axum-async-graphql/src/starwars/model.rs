@@ -86,17 +86,16 @@ impl<'a> Droid<'a> {
 
 pub struct QueryRoot;
 
-// #[Object]
-// impl QueryRoot {
-//     async fn human<'a>(
-//         &self,
-//         ctx: &Context,
-//         #[graphql(desc = "id of the human")] id: String,
-//     ) -> Option<Human<'a>> {
-//         // まだ書けない
-//         ctx.data_unchecked::<StarWars>().human
-//     }
-// }
+#[Object]
+impl QueryRoot {
+    async fn human<'a>(
+        &self,
+        ctx: &Context<'a>,
+        #[graphql(desc = "id of the human")] id: String,
+    ) -> Option<Human<'a>> {
+        ctx.data_unchecked::<StarWars>().human(&id).map(Human)
+    }
+}
 
 #[derive(Interface)]
 #[graphql(

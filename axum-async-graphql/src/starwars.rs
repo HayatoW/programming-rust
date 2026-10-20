@@ -1,10 +1,13 @@
 use std::collections::HashMap;
 
+use async_graphql::Schema;
 use slab::Slab;
 
-use crate::starwars::model::Episode;
+use crate::starwars::model::{Episode, QueryRoot};
 
 mod model;
+
+pub type StarWarsSchema = Schema<QueryRoot>
 
 pub struct StarWarsChar {
     id: &'static str,
