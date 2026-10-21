@@ -88,6 +88,27 @@ pub struct QueryRoot;
 
 #[Object]
 impl QueryRoot {
+    async fn hero<'a>(
+        &self,
+        ctx: &Context<'a>,
+        #[graphql(
+            desc = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode."
+        )]
+        episode: Option<Episode>,
+    ) -> Character<'a> {
+        let star_wars = ctx.data_unchecked::<StarWars>();
+        match episode {
+            Some(episode) => {
+                if episode == Episode::Empire {
+                    Human(star_wars.chars.get(star_wars.luke).unwrap()).into()
+                } else {
+                    Droid(star_wars.chars.get(star_wars.artoo).unwrap()).into()
+                }
+            }
+            None => Human(star_wars.chars.get(star_wars.luke).unwrap()).into(),
+        }
+    }
+
     async fn human<'a>(
         &self,
         ctx: &Context<'a>,
