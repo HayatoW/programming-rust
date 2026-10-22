@@ -1,4 +1,7 @@
-use async_graphql::{Context, Enum, Interface, Object};
+use async_graphql::{
+    Context, Enum, Error, Interface, Object, OutputType, Result,
+    connection::{Connection, Edge, query},
+};
 
 use crate::starwars::{StarWars, StarWarsChar};
 
@@ -116,6 +119,18 @@ impl QueryRoot {
     ) -> Option<Human<'a>> {
         ctx.data_unchecked::<StarWars>().human(&id).map(Human)
     }
+
+    async fn humans<'a>(
+        &self,
+        ctx: &Context<'a>,
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+    ) -> Result<Connection<usize, Human<'a>>> {
+        let humans = ctx.data_unchecked::<StarWars>().humans().to_vec();
+        query_characters(after, before, first, last, &humans, Human).await
+    }
 }
 
 #[derive(Interface)]
@@ -128,4 +143,62 @@ impl QueryRoot {
 pub enum Character<'a> {
     Human(Human<'a>),
     Droid(Droid<'a>),
+}
+
+async fn query_characters<'a, F, T>(
+    after: Option<String>,
+    before: Option<String>,
+    first: Option<i32>,
+    last: Option<i32>,
+    characters: &[&'a StarWarsChar],
+    map_to: F,
+) -> Result<Connection<usize, T>>
+where
+    F: Fn(&'a StarWarsChar) -> T,
+    T: OutputType,
+{
+    query(
+        after,
+        before,
+        first,
+        last,
+        |after, before, first, last| async move {
+            let mut start = 0usize;
+            let mut end = characters.len();
+
+            if let Some(after) = after {
+                if after >= characters.len() {
+                    return Ok(Connection::new(false, false));
+                }
+                start = after + 1;
+            }
+
+            if let Some(before) = before {
+                if before == 0 {
+                    return Ok(Connection::new(false, false));
+                }
+                end = before;
+            }
+
+            let mut slice = &characters[start..end];
+
+            if let Some(first) = first {
+                slice = &slice[..first.min(slice.len())];
+                end -= first.min(slice.len());
+            } else if let Some(last) = last {
+                slice = &slice[slice.len() - last.min(slice.len())..];
+                start = end - last.min(slice.len());
+            }
+
+            let mut connection = Connection::new(start > 0, end < characters.len());
+            connection.edges.extend(
+                slice
+                    .iter()
+                    .enumerate()
+                    .map(|(idx, item)| Edge::new(start + idx, (map_to)(item))),
+            );
+            Ok::<_, Error>(connection)
+        },
+    )
+    .await
 }
