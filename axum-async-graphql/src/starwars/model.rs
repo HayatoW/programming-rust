@@ -131,6 +131,26 @@ impl QueryRoot {
         let humans = ctx.data_unchecked::<StarWars>().humans().to_vec();
         query_characters(after, before, first, last, &humans, Human).await
     }
+
+    async fn droid<'a>(
+        &self,
+        ctx: &Context<'a>,
+        #[graphql(desc = "id of the droid")] id: String,
+    ) -> Option<Droid<'a>> {
+        ctx.data_unchecked::<StarWars>().droid(&id).map(Droid)
+    }
+
+    async fn droids<'a>(
+        &self,
+        ctx: &Context<'a>,
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+    ) -> Result<Connection<usize, Droid<'a>>> {
+        let droids = ctx.data_unchecked::<StarWars>().droids().to_vec();
+        query_characters(after, before, first, last, &droids, Droid).await
+    }
 }
 
 #[derive(Interface)]
