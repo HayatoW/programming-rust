@@ -11,4 +11,7 @@ fn main() {
 
     let serialized = serde_json::to_string(&point).unwrap();
     println!("serialized = {}", serialized);
+
+    let deserialized: Point = serde_json::from_str(&serialized).unwrap();
+    println!("deserialized = {:?}", deserialized);
 }
