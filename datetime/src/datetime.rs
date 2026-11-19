@@ -24,3 +24,13 @@ impl From<chrono::Weekday> for DayOfWeek {
     }
 }
 
+#[derive(Debug, PartialEq, Eq, thiserror::Error)]
+pub enum Error {
+    #[error("has macros")]
+    HasMacros,
+    #[error("out of range")]
+    OutOfRange,
+    #[error("parse")]
+    Parse(#[source] chrono::ParseError)
+}
+
