@@ -34,3 +34,20 @@ pub enum Error {
     Parse(#[source] chrono::ParseError)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct DateTime(chrono::DateTime<chrono::Utc>);
+
+impl DateTime {
+    pub fn from_unix_timestamp(unix_timestamp: i64) {
+        chrono::DateTime::from_timestamp(unix_timestamp, 0).ok_or(Error::OutOfRange).and_then(Self::from
+    }
+}
+
+impl DateTime {
+    fn from_chrono_date_time(
+        chrono_date_time: chrono::DateTime<chrono::Utc>
+    ) -> Result<Self, Error> {
+        let unix_timestamp = chrono_date_time.timestamp();
+
+    }
+}
