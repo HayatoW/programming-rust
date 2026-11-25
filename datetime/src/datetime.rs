@@ -38,8 +38,18 @@ pub enum Error {
 pub struct DateTime(chrono::DateTime<chrono::Utc>);
 
 impl DateTime {
-    pub fn from_unix_timestamp(unix_timestamp: i64) {
-        chrono::DateTime::from_timestamp(unix_timestamp, 0).ok_or(Error::OutOfRange).and_then(Self::from
+    pub fn from_unix_timestamp(unix_timestamp: i64) -> Result<Self, Error> {
+        chrono::DateTime::from_timestamp(unix_timestamp, 0)
+            .ok_or(Error::OutOfRange)
+            .and_then(Self::from_chrono_date_time)
+    }
+
+    pub fn max_unix_timestamp() -> i64 {
+        253_402_300_799_i64
+    }
+
+    pub fn min_unix_timestamp() -> i64 {
+        -62_135_596_800_i64
     }
 }
 
@@ -48,6 +58,12 @@ impl DateTime {
         chrono_date_time: chrono::DateTime<chrono::Utc>
     ) -> Result<Self, Error> {
         let unix_timestamp = chrono_date_time.timestamp();
-
+        if !(Self::min_unix_timestamp()..=Self::max_unix_timestamp()).contains(&unix_timestamp) {
+            return Err(Error::OutOfRange);
+        }
+        if chrono_date_time != chrono::SubsecRound::trunc_subsecs(chrono_date_time, 3) {
+            return Err(Error::HasMacros);
+        }
+        Ok(Self(chrono_date_time))
     }
 }
